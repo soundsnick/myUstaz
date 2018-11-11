@@ -1,0 +1,12 @@
+header.header
+  .container
+    .logo--wrapper
+      a href="/"
+        img.logo src="/assets/logo_big.svg"
+    nav.header__nav
+      - unless auth
+        a.header__nav__item href="/login" = "Войти"
+      - if auth
+        a.header__nav__item href="/logout" = "Выйти"
+      a.header__nav__item href="/about" = "О нас"
+      a.header__nav__item href="/contact" = "Контакты"

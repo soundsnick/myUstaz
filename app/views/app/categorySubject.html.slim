@@ -1,0 +1,16 @@
+.layout.container
+  aside.left-sidebar.sidebar
+    = render 'layouts/categories'
+    = render 'layouts/universities'
+  main.home-main
+    .home-description
+      h3.home-description__title
+        = "Предметы в категории: "
+        span = @category.name
+      span.count = "Найдено: #{@subjects.count}"
+      .subjects
+        - @subjects.each do |s|
+          a.subject href="/subject/#{s.id}?title=#{s.name}"
+            span.subject__title = s.name
+  aside.right-sidebar.sidebar
+    = render 'layouts/find'

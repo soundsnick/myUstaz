@@ -1,0 +1,5 @@
+.categories.block
+  h3.sidebar__title = 'Категории'
+  nav.categories__navigation
+    - @categories.each do |t|
+      a.category href="/category/#{t.id}?category=#{t.name}" = t.name

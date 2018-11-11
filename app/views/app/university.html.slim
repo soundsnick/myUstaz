@@ -1,0 +1,20 @@
+.university
+  .university__header style="background-image: linear-gradient(rgba(205, 220, 57, 0.7), rgba(205, 220, 57, 0.7)), url(/universities/#{@university.image}"
+  .container
+    h3.university__title = @university.name
+    span.university__adress = @university.adress
+    br
+    span.university__contact
+       = @university.phone + ' , ' + @university.email
+    hr.uni
+    h1.teachers__title = "Преподаватели #{@university.name}"
+    .teachers
+      - @teachers.each do |s|
+        a.teacher href="/teacher/#{s.id}?name=#{s.name}"
+          .teacher__avatar--wrapper
+            img.teacher__avatar src="/teachers/#{s.avatar}"
+          h5.teacher__name = s.name + ' ' + s.surname
+          span.teacher__subject = s.subject.name
+      - if @teachers.empty?
+        span.empty = "Преподавателей не добавлено"
+= render 'layouts/footer'

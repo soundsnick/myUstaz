@@ -1,0 +1,25 @@
+.home__header
+  .container
+    .typewriter
+      h1.home__header = "Найти преподавателя"
+    .search--wrapper
+      form action="/search" method="get" style="display: flex"
+        input type="text" placeholder="Поиск" name="search"
+        button.search__button type="submit"
+          img.search-icon src="/assets/search.svg"
+
+.layout.container
+  aside.left-sidebar.sidebar
+    = render 'layouts/categories'
+    = render 'layouts/universities'
+  main.home-main
+    / = render 'layouts/find'
+    h1.home-description style="padding-bottom: 10px;font-size: 30px;"
+      .home-description__title = "MyUstaz"
+      p.home-description__paragraph
+        | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
+  aside.right-sidebar.sidebar
+    a.banner--link href="#"
+      .banner style="background-image: url(/banners/example.png);"
+        h4.banner__title = "Banner Title"
+= render 'layouts/footer'

@@ -1,0 +1,13 @@
+.search-result
+  .container
+    h1.teachers__title = "Результаты поиска по запросу #{params[:search]}"
+    .search--results
+      - @search.each do |s|
+        a.response href = "/teacher/#{s.id}" style="display: flex"
+          div style="flex: 1"
+            h5.response__name = s.name + ' ' + s.surname
+            span.response__univer = s.university.name
+          div.gpa--wrapper
+            span.gpa = Cost.where(teacher_id: s.id).average(:value)
+      - if @search.empty?
+        span.empty = "Ничего не найдено"

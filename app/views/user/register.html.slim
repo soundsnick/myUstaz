@@ -1,0 +1,19 @@
+.login-page
+  .container
+    .login
+      = form_tag action: :register, method: :post
+        h3.login__title = "Регистрация"
+        .flex
+          input.long type="text" placeholder="Имя" name="name"
+          input.long type="text" placeholder="Фамилия" name="surname"
+        input type="text" placeholder="Адрес" name="adress"
+        .flex
+          input.long type="phone" placeholder="Номер телефона" name="phone"
+          select name="sex"
+            option value="1" = "Муж."
+            option value="2" = "Жен."
+        input type="text" placeholder="Электронная почта" name="email"
+        input type="password" placeholder="Пароль" name="password"
+        input type="password" placeholder="Подтверждение пароля" name="confirm"
+        input.button type="submit" value="Регистрация"
+        a.login__link href="/login" = "Уже зарегистрированы?"

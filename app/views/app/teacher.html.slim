@@ -1,0 +1,34 @@
+.teacher-page
+  .teacher-page__header
+    .container
+      h1.teacher-page__name = @teacher.name + ' ' + @teacher.surname
+      span.teacher-page__univer = @teacher.university.name
+      .teacher__star.active
+        a.star data-id=1 href="/rate?teacher=#{params[:id]}&val=1"
+        a.star data-id=2 href="/rate?teacher=#{params[:id]}&val=2"
+        a.star data-id=3 href="/rate?teacher=#{params[:id]}&val=3"
+        a.star data-id=4 href="/rate?teacher=#{params[:id]}&val=4"
+        a.star data-id=5 href="/rate?teacher=#{params[:id]}&val=5"
+  .tags
+    .container
+      h1.teacher-page__name = "Критерий оценивания"
+      - @tags.each do |t|
+        a.tag href="/addTag?teacher=#{params[:id]}&id=#{t.id}" = t.title
+javascript:
+
+  $('.star').on('mouseover', function(){
+      $('.star').css('background-image', 'url(/assets/star.svg)')
+      $(this).css('background-image', 'url(/assets/star_fill.svg)');
+      for(let i = 1; i<=$(this).attr('data-id'); i++){
+          $(`.star[data-id=${i}]`).css('background-image', 'url(/assets/star_fill.svg)');
+      }
+  })
+  $('.teacher__star.active').on('mouseout', function(){
+      $('.star').css('background-image', 'url(/assets/star.svg)');
+      for (let i = 1; i <= #{@rate.value}; i++) {
+          $(`.star[data-id=${i}]`).css('background-image', 'url(/assets/star_fill.svg)');
+      }
+  })
+  for (let k = 1; k <= #{@rate.value}; k++) {
+      $(`.star[data-id=${k}]`).css('background-image', 'url(/assets/star_fill.svg)');
+  }
