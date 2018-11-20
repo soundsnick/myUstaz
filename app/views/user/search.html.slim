@@ -1,13 +1,30 @@
 .search-result
   .container
-    h1.teachers__title = "Результаты поиска по запросу #{params[:search]}"
+    h1.teachers__title = @title
     .search--results
       - @search.each do |s|
-        a.response href = "/teacher/#{s.id}" style="display: flex"
-          div style="flex: 1"
+        - @cost = Cost.where(teacher_id: s.id).average(:value)
+        - if @cost == nil
+          - @cost = 0
+        - else
+          - @cost = @cost.round(1)
+        a.response href = "/teacher/#{s.id}" style="display: flex; "
+          .response__avatar--wrapper style="background-image: url(/teachers/#{s.avatar})"
+          - if @cost < 3 && @cost != 0
+            img.pepper src="/assets/tomato.svg"
+          - if @cost >= 4.5
+            img.pepper src="/assets/pepper.svg"
+          div style="flex: 1; align-self: center;"
             h5.response__name = s.name + ' ' + s.surname
             span.response__univer = s.university.name
           div.gpa--wrapper
-            span.gpa = Cost.where(teacher_id: s.id).average(:value)
+            - if @cost == 0
+              span.gpa.grey = @cost
+            - if (@cost < 4.5 && @cost > 2)
+              span.gpa.yellow = @cost
+            - if (@cost < 3 && @cost != 0)
+              span.gpa.red = @cost
+            - if (@cost >= 4.5)
+              span.gpa.green = @cost
       - if @search.empty?
         span.empty = "Ничего не найдено"

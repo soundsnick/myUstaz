@@ -1,7 +1,7 @@
 .home__header
   .container
     .typewriter
-      h1.home__header = "Найти преподавателя"
+      h1.home__header style="background: none" = "Найти преподавателя"
     .search--wrapper
       form action="/search" method="get" style="display: flex"
         input type="text" placeholder="Поиск" name="search"
@@ -13,13 +13,11 @@
     = render 'layouts/categories'
     = render 'layouts/universities'
   main.home-main
-    / = render 'layouts/find'
-    h1.home-description style="padding-bottom: 10px;font-size: 30px;"
-      .home-description__title = "MyUstaz"
-      p.home-description__paragraph
-        | Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries
+    - @posts.each do |p|
+      .post
+        h3.post__title = p.title
+        p.post__description = p.description
   aside.right-sidebar.sidebar
-    a.banner--link href="#"
-      .banner style="background-image: url(/banners/example.png);"
-        h4.banner__title = "Banner Title"
+    a.banner--link href="http://www.iitu.kz/news/show/id/504"
+      .banner style="background-image: url(/banners/example.jpg);"
 = render 'layouts/footer'

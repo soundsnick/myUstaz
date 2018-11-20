@@ -2,5 +2,5 @@
   h3.sidebar__title = 'Университеты'
   nav.categories__navigation
     - @universities.each do |t|
-      a.category href="/universities/#{t.id}?category=#{t.name}" = t.name
-    a.category href="/universities" = "Все университеты"
+      a.category href="/universities/#{t.id}?name=#{t.name}" = t.name
+    / a.category href="/universities" = "Все университеты"

@@ -1,20 +1,37 @@
 .university
-  .university__header style="background-image: linear-gradient(rgba(205, 220, 57, 0.7), rgba(205, 220, 57, 0.7)), url(/universities/#{@university.image}"
+  .teacher-page__header
+    .container
+      h1.teacher-page__name = @university.name
+      span.university__adress = @university.adress
+      span.university__adress = @university.phone
+      span.university__adress = @university.email
   .container
-    h3.university__title = @university.name
-    span.university__adress = @university.adress
-    br
-    span.university__contact
-       = @university.phone + ' , ' + @university.email
-    hr.uni
-    h1.teachers__title = "Преподаватели #{@university.name}"
-    .teachers
+    h1.commentaries__title style="padding-top: 30px; padding-bottom: 20px;" = "Преподаватели #{@university.name}"
+    .teacherss
       - @teachers.each do |s|
-        a.teacher href="/teacher/#{s.id}?name=#{s.name}"
-          .teacher__avatar--wrapper
-            img.teacher__avatar src="/teachers/#{s.avatar}"
-          h5.teacher__name = s.name + ' ' + s.surname
-          span.teacher__subject = s.subject.name
+        - @cost = Cost.where(teacher_id: s.id).average(:value)
+        - if @cost == nil
+          - @cost = 0
+        - else
+          - @cost = @cost.round(1)
+        a.response href = "/teacher/#{s.id}" style="display: flex; "
+          .response__avatar--wrapper style="background-image: url(/teachers/#{s.avatar})"
+          - if @cost < 3 && @cost != 0
+            img.pepper src="/assets/tomato.svg"
+          - if @cost >= 4.5
+            img.pepper src="/assets/pepper.svg"
+          div style="flex: 1; align-self: center;"
+            h5.response__name = s.name + ' ' + s.surname
+            span.response__univer = s.subject.name
+          div.gpa--wrapper
+            - if @cost == 0
+              span.gpa.grey = @cost
+            - if (@cost < 4.5 && @cost > 2)
+              span.gpa.yellow = @cost
+            - if (@cost < 3 && @cost != 0)
+              span.gpa.red = @cost
+            - if (@cost >= 4.5)
+              span.gpa.green = @cost
       - if @teachers.empty?
         span.empty = "Преподавателей не добавлено"
 = render 'layouts/footer'

@@ -12,4 +12,7 @@ Rails.application.routes.draw do
   get '/search', to: 'user#search', as: 'search'
   get '/teacher/:id(.:format)', to: 'app#teacher', as: 'teacher'
   get '/rate', to: 'app#rate'
+  get '/commentary/add', to: 'user#commentaryAdd'
+  get '/subject/:id(.:format)', to: 'user#subject_page'
+  get '/tag/add', to: 'user#tagAdd'
 end
