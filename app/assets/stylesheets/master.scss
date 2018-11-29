@@ -1,5 +1,6 @@
 $main-color: #2196F3;
 $main-color_dim: #145990;
+//$main-color_dim: #f37f20;
 *{
   box-sizing: border-box;
 }
@@ -14,12 +15,12 @@ body{
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #f9f9f9;
+  background: #f1f1f1;
   font-family: Gotham Pro;
 }
 .container{
   margin: auto;
-  width: 1170px;
+  max-width: 1170px;
 }
 .header{
   .container{
@@ -729,28 +730,46 @@ body{
   }
 }
 .post{
-  padding: 25px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.3);
-  border-radius: 2px;
+  padding: 35px 45px;
+  background: #fff;
+  box-shadow: 0 9px 21px -11px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
   margin-bottom: 20px;
   transition: transform 0.2s, box-shadow 0.2s;
+  will-change: box-shadow, transform;
+  backface-visibility: hidden;
   &:hover{
     transform: scale(1.02);
-    box-shadow: 0 1px 8px rgba(0,0,0,.3);
+    -webkit-font-smoothing: subpixel-antialiased;
+    box-shadow: 0 35px 21px -24px rgba(0, 0, 0, 0.07);
   }
   &:hover .post__title{
-    color: $main-color_dim;
+    color: $main-color;
   }
   &__title{
-    margin: 10px 0;
-    font-size: 20px;
+    font-size: 21px;
+    font-weight: 500;
     color: #444444;
-    transition: color 0.2s;
+    line-height: 1.3;
+    margin-bottom: 5px;
+    margin-top: 0;
+    transition: color 0.3s;
   }
   &__description{
-    color: #444444;
+    color: #4a4a4a;
     font-weight: 200;
     line-height: 1.5;
+    margin-top: 0px;
+    margin-bottom: 0;
+    font-size: 15px;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+  &__date{
+    font-size: 12px;
+    font-weight: 300;
+    color: grey;
+    margin-top: 10px;
+    display: block;
   }
 }
 .pepper{
