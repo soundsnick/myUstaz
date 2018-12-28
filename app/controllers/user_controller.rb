@@ -73,6 +73,12 @@ class UserController < ApplicationController
     redirect_to root_path
   end
 
+  def search_api
+    @title = "Результаты поиска по запросу: #{params[:search]}"
+    @search = Teacher.where("name LIKE :name OR surname LIKE :name", {:name => "%#{params[:search]}%"}).limit(2)
+    render json: @search, :include => {:university => {only: [:name, :id]}, :costs => {only: :value}}
+  end
+
   def search
     @title = "Результаты поиска по запросу: #{params[:search]}"
     @search = Teacher.where("name LIKE :name OR surname LIKE :name", {:name => "%#{params[:search]}%"})

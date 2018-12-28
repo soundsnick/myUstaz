@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post '/register', to: 'user#register', as: 'register'
   get '/universities/:id(.:format)', to: 'app#university'
   get '/logout', to: 'user#logout'
+  post '/search', to: 'user#search_api', as: 'search_xhr'
   get '/search', to: 'user#search', as: 'search'
   get '/teacher/:id(.:format)', to: 'app#teacher', as: 'teacher'
   get '/rate', to: 'app#rate'

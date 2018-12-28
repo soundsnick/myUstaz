@@ -1,26 +1,65 @@
-.home__header
+main.main-home.main-full
   .container
-    .typewriter
-      h1.home__header style="background: none" = "Найти преподавателя"
-    .search--wrapper
-      form action="/search" method="get" style="display: flex"
-        input type="text" placeholder="Поиск" name="search"
-        button.search__button type="submit"
-          img.search-icon src="/assets/search.svg"
-
-.layout.container
-  aside.left-sidebar.sidebar
-    = render 'layouts/categories'
-    = render 'layouts/universities'
-  main.home-main
-    h1.title = 'Блог'
-    - @posts.each do |p|
-      .post
-        h3.post__title = p.title
-        p.post__description = p.description
-        span.post__date = p.created_at.strftime("%Y-%m-%d")
-  aside.right-sidebar.sidebar
-    h3.sidebar__title = 'Новости IITU'
-    a.banner--link href="http://www.iitu.kz/news/show/id/504"
-      .banner style="background-image: url(/banners/example.jpg);"
+    = form_with url: '/search', method: :post, class: 'home__form'
+      .home__form--wrapper
+        input.home__form--field type="text" name="search" placeholder="Найти преподавателя"
+        input.home__form--button type="submit" value=""
+      .home__form--response
+.shade
 = render 'layouts/footer'
+coffee:
+  $(document).ready ->
+    average = (costs) ->
+      values = 0
+      values += cost.value for cost in costs
+      values / costs.length
+
+    $(".home__form").on("ajax:success", (event) ->
+      [data, status, xhr] = event.detail
+      response = JSON.parse(xhr.responseText)
+      htmlResponse = ""
+      iterate = (teacher) ->
+        teacher.averageCost = average teacher.costs
+        htmlResponse +=
+          "<div class='teacher' data-id=#{teacher.id}>
+            <div class='teacher__avatar--wrapper'>
+              <a href='/teacher/#{teacher.id}'>
+                <div class='teacher__avatar' style='background-image: url(/teachers/#{teacher.avatar})' data-avatar='#{teacher.avatar}'></div>
+              </a>
+            </div>
+            <div class='teacher__info'>
+              <h3 class='teacher__name' data-name='#{teacher.surname + ' ' + teacher.name}'><a href='/teacher/#{teacher.id}'>#{teacher.surname + ' ' + teacher.name}</a></h3>
+              <a class='teacher__university' href='/university/#{teacher.id}' data-university='#{teacher.university.name}'>#{teacher.university.name}</a>
+            </div>
+            <div class='teacher__rate--wrapper'>
+              <span class='teacher__rate' data-rate='#{teacher.averageCost}'>#{teacher.averageCost.toFixed(1)}</span>
+            </div>
+          </div>"
+      iterate teacher for teacher in response
+      query = $('.home__form--field').val()
+      htmlResponse = if htmlResponse == "" then "<span class='empty'>Ничего не найдено</span>" else htmlResponse += "<a href='/search?query=#{query}' class='next-button'><i class='fa fa-angle-right'></i></a>"
+      $(".response").removeClass('animated').addClass('anim fadeOutDown')
+      $('.home__form--field').focus();
+      deleteResponse = () ->
+        $('.response.fadeOutDown').remove()
+        return 0
+      setTimeout(deleteResponse, 200);
+      $(".home__form--response").append '<div class="response animated fadeInUp"></div>'
+      $(".response").html htmlResponse
+      pad = $(".response.animated").height()
+      pad = if pad > 100 then $('.home__form').css('margin-top').split('px')[0] - 10 else 0
+      $('.home__form').css('transform', 'translateY(-'+pad+'px)')
+    ).on "ajax:error", (event) ->
+      $(".home__form--response").html "<span class='empty'>Ошибка. Проверьте соединение с Интернетом</span>"
+
+    $('.home__form--field').on 'focus', () ->
+      $('.shade').fadeIn('fast')
+      $('.response.animated').fadeIn()
+      $('.response.anim').removeClass('anim fadeOutDown').addClass('animated fadeInUp');
+      pad = $(".response.animated").height()
+      pad = if pad > 100 then $('.home__form').css('margin-top').split('px')[0] - 10 else 0
+      $('.home__form').css('transform', 'translateY(-' + pad + 'px)')
+    .on 'blur', () ->
+      $('.shade').fadeOut('fast')
+      $('.response.animated').removeClass('animated fadeInUp').addClass('anim fadeOutDown');
+      $('.home__form').css('transform', 'translateY(0px)')
