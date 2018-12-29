@@ -1,20 +1,43 @@
 main.main-home.main-full
   .container
+    .flex-filter
+      .top-teacher data-top-name=@topTeacher.name data-top-surname=@topTeacher.surname
+        .top-teacher__avatar--wrapper
+          .top-teacher__avatar data-top-avatar=@topTeacher.avatar style="background-image: url(/teachers/#{@topTeacher.avatar})"
+        .top-teacher__info--wrapper
+          .top-teacher__info
+            .top-teacher__rate = '#1'
+            .top-teacher__fullname = @topTeacher.name + ' ' + @topTeacher.surname
+            a href="/toplist" = 'Рейтинг'
     = form_with url: '/search', method: :post, class: 'home__form'
       .home__form--wrapper
-        input.home__form--field type="text" name="search" placeholder="Найти преподавателя"
-        input.home__form--button type="submit" value=""
-      .home__form--response
+        input.home__form--field type="text" name="search" autocomplete="off" placeholder="Найти преподавателя"
+        input.home__form--button type="submit" value="" onclick="$('.home__form--field').focus()"
+      .home__form--response  onsubmit="$('.home__form--field').focus()"
 .shade
 = render 'layouts/footer'
+css:
+  .header{
+    /*position: fixed;*/
+    background: transparent;
+    box-shadow: none;
+  }
 coffee:
   $(document).ready ->
-    average = (costs) ->
-      values = 0
-      values += cost.value for cost in costs
-      values / costs.length
+    getPosition = (element) ->
+      xPosition = 0;
+      yPosition = 0;
+      xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
+      yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
+      element = element.offsetParent
+      console.log(yPosition)
+      {x: xPosition, y: yPosition}
 
-    $(".home__form").on("ajax:success", (event) ->
+
+    $(".home__form")
+    .on "ajax:send", () ->
+      $('.home__form--response').html "<div class='response'><span class='empty'>Поиск</span></div>"
+    .on "ajax:success", (event) ->
       [data, status, xhr] = event.detail
       response = JSON.parse(xhr.responseText)
       htmlResponse = ""
@@ -37,9 +60,8 @@ coffee:
           </div>"
       iterate teacher for teacher in response
       query = $('.home__form--field').val()
-      htmlResponse = if htmlResponse == "" then "<span class='empty'>Ничего не найдено</span>" else htmlResponse += "<a href='/search?query=#{query}' class='next-button'><i class='fa fa-angle-right'></i></a>"
+      htmlResponse = if htmlResponse == "" then "<span class='empty'>Ничего не найдено</span>" else htmlResponse += "<a href='/search?search=#{query}' class='next-button'><i class='fa fa-angle-right'></i></a>"
       $(".response").removeClass('animated').addClass('anim fadeOutDown')
-      $('.home__form--field').focus();
       deleteResponse = () ->
         $('.response.fadeOutDown').remove()
         return 0
@@ -47,19 +69,31 @@ coffee:
       $(".home__form--response").append '<div class="response animated fadeInUp"></div>'
       $(".response").html htmlResponse
       pad = $(".response.animated").height()
-      pad = if pad > 100 then $('.home__form').css('margin-top').split('px')[0] - 10 else 0
+      pad = if pad > 100 then getPosition($('.home__form')[0])['y'] - 10 else 0
       $('.home__form').css('transform', 'translateY(-'+pad+'px)')
-    ).on "ajax:error", (event) ->
+    .on "ajax:error", (event) ->
       $(".home__form--response").html "<span class='empty'>Ошибка. Проверьте соединение с Интернетом</span>"
 
-    $('.home__form--field').on 'focus', () ->
+    focus = () ->
       $('.shade').fadeIn('fast')
       $('.response.animated').fadeIn()
       $('.response.anim').removeClass('anim fadeOutDown').addClass('animated fadeInUp');
       pad = $(".response.animated").height()
-      pad = if pad > 100 then $('.home__form').css('margin-top').split('px')[0] - 10 else 0
+      pad = if pad > 100 then getPosition($('.home__form')[0])['y'] - 10 else 0
       $('.home__form').css('transform', 'translateY(-' + pad + 'px)')
-    .on 'blur', () ->
+
+    unfocus = () ->
       $('.shade').fadeOut('fast')
       $('.response.animated').removeClass('animated fadeInUp').addClass('anim fadeOutDown');
       $('.home__form').css('transform', 'translateY(0px)')
+      hideResponse = () ->
+        $('.response.fadeOutDown').hide()
+        return 0
+      setTimeout(hideResponse, 200);
+
+    $('.home__form--field').on 'focus', () ->
+     focus()
+    .on 'blur', () ->
+      setTimeout((event) ->
+        unfocus() unless document.activeElement in $('a')
+      , 1);

@@ -1,0 +1,26 @@
+.main-search.main-full
+  .top-10
+    .container
+      h1.title.rating__title = 'Топ 10'
+      .search__results
+        - @search.each do |teacher|
+          - average = teacher.costs.average(:value)
+          .teacher.animated.delay-5ms.fadeInUp data-id=teacher.id
+            a.teacher__avatar--wrapper href=teacher_path(teacher.id)
+              .teacher__avatar style='background-image: url(/teachers/#{teacher.avatar})' data-avatar='#{teacher.avatar}'
+            .teacher__info
+              h3.teacher__name data-name='#{teacher.surname + ' ' + teacher.name}'
+                a href=teacher_path(teacher.id) = teacher.surname + ' ' + teacher.name
+              a.teacher__university href='/university/#{teacher.id}' data-university=teacher.university.name = teacher.university.name
+            .teacher__rate--wrapper
+              span.teacher__rate data-rate=average = average.round(1)
+      - if @search.empty?
+        span.empty = "Преподавателей нет"
+    = render 'layouts/footer'
+css:
+  .header{
+    /*background: rgb(255, 216, 85);*/
+    background: rgba(255,255,255,.3);
+    position: fixed;
+    z-index: 99999;
+  }
