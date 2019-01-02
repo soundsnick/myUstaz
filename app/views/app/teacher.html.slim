@@ -3,87 +3,92 @@
     .container
       .teacher-page__avatar--wrapper
         .teacher-page__avatar style="background-image: url(/teachers/#{@teacher.avatar})"
-        - if @cost < 3 && @cost != 0
-          img.pepper src="/assets/tomato.svg"
-        - if @cost >= 4.5
-          img.pepper src="/assets/pepper.svg"
-      h1.teacher-page__name
-        = @teacher.name + ' ' + @teacher.surname
-        a href="/universities/#{@teacher.university.id}?name=#{@teacher.university.name}"
-          span.teacher-page__univer = @teacher.university.name
-      - if @cost == 0
-        span.gpa-teacher.grey = @cost
-      - if (@cost < 4.5 && @cost > 2)
-        span.gpa-teacher.yellow = @cost
-      - if (@cost < 3 && @cost != 0)
-        span.gpa-teacher.red = @cost
-      - if (@cost >= 4.5)
-        span.gpa-teacher.green = @cost
-      .teacher__star.active
-        a.star data-id=1 href="/rate?teacher=#{params[:id]}&val=1"
-        a.star data-id=2 href="/rate?teacher=#{params[:id]}&val=2"
-        a.star data-id=3 href="/rate?teacher=#{params[:id]}&val=3"
-        a.star data-id=4 href="/rate?teacher=#{params[:id]}&val=4"
-        a.star data-id=5 href="/rate?teacher=#{params[:id]}&val=5"
-  .tags
-    form.container action="/tags" method="post"
-      h1.commentaries__title = "Критерий оценивания"
-      - @tags.each do |t|
-        - @taga = Taguser.where('teacher_id = ? AND tag_id = ?', params[:id], t.id)
-        - @count = @taga.count
-        a href="/tag/add?teacher=#{params[:id]}&tag=#{t.id}"
-          label.tag--wrapper
-            - if auth && @count > 0
-              - if Taguser.where('teacher_id = ? AND user_id = ? AND tag_id = ?', params[:id], session[:auth]['id'], t.id).count > 0
-                input.tag__checker type="checkbox" name=t.id hidden="" checked="checked"
-              - else
-                input.tag__checker type="checkbox" name=t.id hidden=""
-            - else
-              input.tag__checker type="checkbox" name=t.id hidden=""
-            .tag
-              span = t.title
-              - if @count == 0
-                - @count = ""
-              - else
-                - @count = " (#{@count})"
-              span.tag__count = @count
+      .teacher-page__info
+        h1.teacher-page__name
+          = @teacher.name + ' ' + @teacher.surname
+        a href="/search?department=#{@teacher.department.id}"
+          span.teacher-page__subtitle = "Кафедра: " + @teacher.department.name
+        .teacher-page__disciplines
+          h3.teacher-page__subtitle = 'Дисциплины: '
+          - @teacher.subjects.each do |subject|
+            span.teacher-page__discipline = subject.name
+      .teacher-page__rates
+        h1.teacher-page__average
+          = @teacher.rates.average(:value).to_d.round(1)
+          span.teacher-page__average--description = 'Общая оценка'
+  .container
+    .flex
+      .search__content
+        .tags
+          h1.commentaries__title = "Критерий оценивания"
+          - @tags.each do |t|
+            - @tag_user = Taguser.where('teacher_id = ? AND tag_id = ?', params[:id], t.id)
+            - @count = @tag_user.count
+            a href="/tag/add?teacher=#{params[:id]}&tag=#{t.id}"
+                - ifchecked = ''
+                - if auth && @count > 0
+                  - ifchecked = Taguser.where('teacher_id = ? AND user_id = ? AND tag_id = ?', params[:id], session[:auth]['id'], t.id).count
+                  - ifchecked = ifchecked ? 'active' : ifchecked
+                div class="tag #{ifchecked}"
+                  span = t.title
+                  - if @count == 0
+                    - @count = ""
+                  - else
+                    - @count = " (#{@count})"
+                  span.tag__count = @count
+      .search__sidebar--wrapper
+        .search__sidebar
+          h3.lil-title = 'Оцените преподавателя'
+          - if auth
+            .teacher__star
+              a.star data-id=1 href="/rate?teacher=#{params[:id]}&val=1"
+              a.star data-id=2 href="/rate?teacher=#{params[:id]}&val=2"
+              a.star data-id=3 href="/rate?teacher=#{params[:id]}&val=3"
+              a.star data-id=4 href="/rate?teacher=#{params[:id]}&val=4"
+              a.star data-id=5 href="/rate?teacher=#{params[:id]}&val=5"
+          - else
+            a.grey-button href=login_path = 'Войти'
+
   .commentaries
     .container
-      h1.commentaries__title = "Отзывы"
-      form.commentary-form action="/commentary/add" method="get"
-        textarea.commentary-form__textarea placeholder="Ваш отзыв о преподавателе" name="text"
-        input type="text" name="teacher" value="#{params[:id]}" hidden="hidden"
-        button.form--button type="submit" = "Добавить"
+      - if auth
+        h1.commentaries__title = "Отзывы"
+        form.commentary-form action="/commentary/add" method="get"
+          textarea.commentary-form__textarea placeholder="Ваш отзыв о преподавателе" name="text"
+          input type="text" name="teacher" value="#{params[:id]}" hidden="hidden"
+          button.form--button.next-button-text type="submit" = "Добавить"
+      - else
+        .non-auth-commentaries
+          h1.commentaries__title = "Отзывы"
+          p = "Вы должны авторизоваться для того чтобы оставить отзыв"
+          a.grey-button href=login_path = 'Войти'
       - @commentaries.each do |c|
         .commentary
           .commentary__img--wrapper
             img.commentary__img src="/teachers/anonym.png"
           .commentary__body
             = c.text
-            - if @c = Cost.find_by('teacher_id = ? and user_id = ?', params[:id], c.user_id)
-              .commentary__cost
-                = @c.value
-                img src="/assets/star_fill.svg"
+            - if @c = Rate.find_by('teacher_id = ? and user_id = ?', params[:id], c.user_id)
+              .commentary__rate
+                - (0..@c.value).step(1) do
+                  img src="/assets/star_fill.svg"
       - if @commentaries.empty?
         div.commentary__empty
           span.empty style="color: #444444;" = "Отзывов нет. Добавьте первый отзыв."
 = render 'layouts/footer'
 javascript:
-  $('.star').on('mouseover', function(){
-      $('.star').css('background-image', 'url(/assets/star.svg)')
-      $(this).css('background-image', 'url(/assets/star_fill.svg)');
-      for(let i = 1; i<=$(this).attr('data-id'); i++){
-          $(`.star[data-id=${i}]`).css('background-image', 'url(/assets/star_fill.svg)');
-      }
-  })
-- if @rate
-  javascript:
-      $('.teacher__star.active').on('mouseout', function () {
-          $('.star').css('background-image', 'url(/assets/star.svg)');
-          for (let i = 1; i <= #{@rate.value}; i++) {
-              $(`.star[data-id=${i}]`).css('background-image', 'url(/assets/star_fill.svg)');
-          }
-      })
-      for (let k = 1; k <= #{@rate.value}; k++) {
-          $(`.star[data-id=${k}]`).css('background-image', 'url(/assets/star_fill.svg)');
-      }
+    window.rate_value = #{@rate}
+coffee:
+  window.turnon = (obj) ->
+    obj.css('background-image', 'url(/assets/star_fill.svg)')
+  window.turnoff = (obj) ->
+    obj.css('background-image', 'url(/assets/star.svg)')
+  turnon $(".star[data-id =#{i}]") for i in [1..rate_value]
+  $('.star').on 'mouseover', () ->
+    turnoff $('.star')
+    turnon $(this)
+    turnon $(".star[data-id =#{i}]") for i in [1..$(this).attr('data-id')]
+  $('.teacher__star').on 'mouseout', () ->
+    turnoff $('.star')
+    turnon $(".star[data-id =#{i}]") for i in [1..rate_value]
+

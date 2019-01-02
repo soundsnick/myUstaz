@@ -1,3 +1,4 @@
 class Rate < ApplicationRecord
-  belongs_to :categories :user
+  belongs_to :teacher
+  belongs_to :user
 end

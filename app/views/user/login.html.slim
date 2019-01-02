@@ -1,11 +1,10 @@
-.login-page
+main.main-login.main-full
   .container
     .login
       = form_tag action: :login, method: :post
-        h3.login__title = "Войти"
+        h3.login__title = "Вход через DL"
         - if notice
-          span.notice = notice
-        input type="text" placeholder="Электронная почта" name="email"
-        input type="password" placeholder="Пароль" name="password"
-        input.button type="submit" value="Войти"
-        a.login__link href="/register" = "Зарегистрироваться"
+          span.empty = notice
+        input.search--field.login--field type="text" placeholder="Логин" name="username"
+        input.search--field.login--field type="password" placeholder="Пароль" name="password"
+        input.next-button-text.login--button type="submit" value="Войти"

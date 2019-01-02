@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181116073738) do
+ActiveRecord::Schema.define(version: 20181229205057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,12 +19,6 @@ ActiveRecord::Schema.define(version: 20181116073738) do
     t.string "name"
     t.string "icon"
     t.integer "price"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "category_subjects", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -38,10 +32,8 @@ ActiveRecord::Schema.define(version: 20181116073738) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "costs", force: :cascade do |t|
-    t.integer "teacher_id"
-    t.integer "user_id"
-    t.integer "value"
+  create_table "departments", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -52,10 +44,11 @@ ActiveRecord::Schema.define(version: 20181116073738) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "description"
+    t.text "image"
   end
 
   create_table "rates", force: :cascade do |t|
-    t.integer "category_id"
+    t.integer "teacher_id"
     t.integer "user_id"
     t.integer "value"
     t.datetime "created_at", null: false
@@ -64,9 +57,13 @@ ActiveRecord::Schema.define(version: 20181116073738) do
 
   create_table "subjects", force: :cascade do |t|
     t.string "name"
-    t.integer "category_subject_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "subjects_teachers", force: :cascade do |t|
+    t.integer "teacher_id"
+    t.integer "subject_id"
   end
 
   create_table "tags", force: :cascade do |t|
@@ -93,7 +90,7 @@ ActiveRecord::Schema.define(version: 20181116073738) do
     t.string "surname"
     t.string "avatar"
     t.integer "university_id"
-    t.integer "subject_id"
+    t.integer "department_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -109,18 +106,10 @@ ActiveRecord::Schema.define(version: 20181116073738) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "surname"
-    t.string "adress"
-    t.integer "university_id"
-    t.integer "sex"
-    t.string "phone"
-    t.string "avatar"
+    t.string "dl_username"
     t.integer "role"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "email"
-    t.string "password"
   end
 
 end

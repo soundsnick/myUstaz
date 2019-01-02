@@ -1,0 +1,60 @@
+main.main-search.main-full
+  .container
+    h1.title = @title
+    - unless @search.empty?
+      span.subtitle = "Найдено #{@query.length} записей, показано #{@search.length}"
+    - if @filter_department || @filter_subject || @filter_sort
+      .filters-output
+        - if @filter_department
+          .filter data-filter-name=@filter_department.name = 'Кафедра: ' + @filter_department.name
+        - if @filter_subject
+          .filter data-filter-name=@filter_subject.name = 'Дисциплина: ' + @filter_subject.name
+        - if @filter_sort
+          .filter data-filter-name=@filter_sort = 'Сортировка ' + @filter_sort
+        a.filter.gradient href="/search?search=#{params[:search]}" = 'Очистить'
+    .flex
+      .search__content
+        .search__results
+          - @search.each do |teacher|
+            - average = teacher.rates.average(:value)
+            - average = average == nil ? average.to_i : average.to_d
+            - if average == nil
+              - average = 0
+            .teacher.animated.delay-5ms.fadeInUp data-id=teacher.id
+              a.teacher__avatar--wrapper href=teacher_path(teacher.id)
+                .teacher__avatar style='background-image: url(/teachers/#{teacher.avatar})' data-avatar='#{teacher.avatar}'
+              .teacher__info
+                h3.teacher__name data-name='#{teacher.surname + ' ' + teacher.name}'
+                  a href=teacher_path(teacher.id) = teacher.surname + ' ' + teacher.name
+                a.teacher__department href='/search?department=#{teacher.department.id}' data-subject=teacher.department.id = teacher.department.name
+              .teacher__rate--wrapper
+                span.teacher__rate data-rate=average = average.round(1)
+          - unless @isAll
+            a.next-button-text.animated.delay-1s.fadeInUp href='/search?search=#{params[:search]}&show=all' = 'Показать все'
+        - if @search.empty?
+          span.empty = "Ничего не найдено"
+      .search__sidebar--wrapper
+        aside.search__sidebar#searchSidebar
+          h3.lil-title = "Фильтр поиска"
+          = form_with url: "/search", method: :get, local: true, class: 'search-filter'
+            input type='hidden' name='search' value=params[:search]
+            select#department.search-filter__select name="department"
+              option value='' = 'Кафедра'
+              - @departments.each do |department|
+                option value=department.id = department.name
+            select#discipline.search-filter__select name="subject"
+              option value="" = 'Дисциплина'
+              - @subjects.each do |subject|
+                option value=subject.id = subject.name
+            select#sort.search-filter__select name="sort"
+              option value="" = 'Сортировка'
+              option value=0 = 'По рейтингу (убывание)'
+              option value=1 = 'По рейтингу (возрастание)'
+              option value=2 = 'По алфавиту'
+            input.next-button-text type='submit' value="Применить"
+
+= render 'layouts/footer'
+coffee:
+  $('document').ready ->
+    $('select')
+      .selectric()

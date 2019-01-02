@@ -1,0 +1,24 @@
+main.main-news.main-full
+  .container
+    h1.title = @title
+    - if params[:query]
+      h4.subtitle = "Результаты поиска по запросу: #{params[:query]}"
+    .flex
+      .search__content.news__feed
+        - @news.each do |new|
+          .new--wrapper
+            .new__image--wrapper
+              .new__image style="background-image: url(/news/#{new.image})"
+            .new.card data-id=new.id
+              h3.new__title data-name=new.title = new.title
+              p.new__description data-description=new.description = new.description
+              .new__footer
+                span.new__published data-published=new.created_at = new.created_at.in_time_zone("Almaty").strftime("%d.%m.%Y в %H:%S")
+                a.new__button.next-button-text href="/post/#{new.id}" = "Подробнее"
+      .search__sidebar--wrapper
+        aside.search__sidebar#searchSidebar
+          h3.lil-title = "Поиск по новостям"
+          = form_with url: '/news', method: :get, class: 'news-search', local: true
+            input.search--field type="text" name="query" placeholder="Введите запрос"
+            input.next-button-text type="submit" value="Найти"
+= render 'layouts/footer'

@@ -1,26 +1,35 @@
-.main-search.main-full
+main.main-rating.main-full
   .top-10
     .container
-      h1.title.rating__title = 'Топ 10'
+      h1.title.rating__title = 'Рейтинг MyUstaz'
+  .rating__content
+    .container
+      h1.title = 'Топ 5 по средней оценке'
       .search__results
-        - @search.each do |teacher|
-          - average = teacher.costs.average(:value)
+        - @average.each do |teacher|
+          - average = teacher.rates.average(:value)
+          - average = average == nil ? average.to_i : average.to_d
           .teacher.animated.delay-5ms.fadeInUp data-id=teacher.id
             a.teacher__avatar--wrapper href=teacher_path(teacher.id)
               .teacher__avatar style='background-image: url(/teachers/#{teacher.avatar})' data-avatar='#{teacher.avatar}'
             .teacher__info
               h3.teacher__name data-name='#{teacher.surname + ' ' + teacher.name}'
                 a href=teacher_path(teacher.id) = teacher.surname + ' ' + teacher.name
-              a.teacher__university href='/university/#{teacher.id}' data-university=teacher.university.name = teacher.university.name
+              a.teacher__department href='/search?department=#{teacher.department.id}' data-department=teacher.department.name = teacher.department.name
             .teacher__rate--wrapper
               span.teacher__rate data-rate=average = average.round(1)
-      - if @search.empty?
+      - if @average.empty?
         span.empty = "Преподавателей нет"
     = render 'layouts/footer'
-css:
+scss:
   .header{
-    /*background: rgb(255, 216, 85);*/
-    background: rgba(255,255,255,.3);
+    background: transparent;
     position: fixed;
     z-index: 99999;
   }
+  .header__nav__item{
+    color: #fff;
+  }
+coffee:
+  $(window).on 'scroll', () ->
+    if $(this).scrollTop() > 50 then $('.header').addClass('purple') else $('.header').removeClass('purple')

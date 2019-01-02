@@ -1,14 +1,16 @@
 main.main-home.main-full
   .container
-    .flex-filter
-      .top-teacher data-top-name=@topTeacher.name data-top-surname=@topTeacher.surname
-        .top-teacher__avatar--wrapper
-          .top-teacher__avatar data-top-avatar=@topTeacher.avatar style="background-image: url(/teachers/#{@topTeacher.avatar})"
-        .top-teacher__info--wrapper
-          .top-teacher__info
-            .top-teacher__rate = '#1'
-            .top-teacher__fullname = @topTeacher.name + ' ' + @topTeacher.surname
-            a href="/toplist" = 'Рейтинг'
+    - if @topTeacher
+      .flex-filter
+        .top-teacher data-top-name=@topTeacher.name data-top-surname=@topTeacher.surname
+          a href=teacher_path(@topTeacher.id)
+            .top-teacher__avatar--wrapper
+              .top-teacher__avatar data-top-avatar=@topTeacher.avatar style="background-image: url(/teachers/#{@topTeacher.avatar})"
+          .top-teacher__info--wrapper
+            .top-teacher__info
+              .top-teacher__rate = '#1'
+              .top-teacher__fullname = @topTeacher.name + ' ' + @topTeacher.surname
+              a href="/toplist" = 'Рейтинг'
     = form_with url: '/search', method: :post, class: 'home__form'
       .home__form--wrapper
         input.home__form--field type="text" name="search" autocomplete="off" placeholder="Найти преподавателя"
@@ -30,7 +32,6 @@ coffee:
       xPosition += (element.offsetLeft - element.scrollLeft + element.clientLeft);
       yPosition += (element.offsetTop - element.scrollTop + element.clientTop);
       element = element.offsetParent
-      console.log(yPosition)
       {x: xPosition, y: yPosition}
 
 
@@ -42,7 +43,7 @@ coffee:
       response = JSON.parse(xhr.responseText)
       htmlResponse = ""
       iterate = (teacher) ->
-        teacher.averageCost = average teacher.costs
+        teacher.averageCost = average teacher.rates
         htmlResponse +=
           "<div class='teacher' data-id=#{teacher.id}>
             <div class='teacher__avatar--wrapper'>
@@ -52,7 +53,7 @@ coffee:
             </div>
             <div class='teacher__info'>
               <h3 class='teacher__name' data-name='#{teacher.surname + ' ' + teacher.name}'><a href='/teacher/#{teacher.id}'>#{teacher.surname + ' ' + teacher.name}</a></h3>
-              <a class='teacher__university' href='/university/#{teacher.id}' data-university='#{teacher.university.name}'>#{teacher.university.name}</a>
+              <a class='teacher__department' href='/search?department#{teacher.department.id}' data-subject='#{teacher.department.name}'>#{teacher.department.name}</a>
             </div>
             <div class='teacher__rate--wrapper'>
               <span class='teacher__rate' data-rate='#{teacher.averageCost}'>#{teacher.averageCost.toFixed(1)}</span>

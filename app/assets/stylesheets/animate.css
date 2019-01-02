@@ -3585,6 +3585,11 @@
   animation-delay: 2s;
 }
 
+.animated.delay-5ms {
+    -webkit-animation-delay: 5ms;
+    animation-delay: 5ms;
+}
+
 .animated.delay-3s {
   -webkit-animation-delay: 3s;
   animation-delay: 3s;
