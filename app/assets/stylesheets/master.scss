@@ -717,3 +717,11 @@ body{
     display: inline-block;
   }
 }
+
+.admin-header{
+  background: #fff;
+  box-shadow: $shadow;
+  .container{
+    align-items: center;
+  }
+}

@@ -41,11 +41,8 @@
           h3.lil-title = 'Оцените преподавателя'
           - if auth
             .teacher__star
-              a.star data-id=1 href="/rate?teacher=#{params[:id]}&val=1"
-              a.star data-id=2 href="/rate?teacher=#{params[:id]}&val=2"
-              a.star data-id=3 href="/rate?teacher=#{params[:id]}&val=3"
-              a.star data-id=4 href="/rate?teacher=#{params[:id]}&val=4"
-              a.star data-id=5 href="/rate?teacher=#{params[:id]}&val=5"
+              - (1..5).each do |id|
+                a.star data-id=id href="/rate?teacher=#{params[:id]}&val=#{id}"
           - else
             a.grey-button href=login_path = 'Войти'
 

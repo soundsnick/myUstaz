@@ -80,7 +80,7 @@ class AppController < ApplicationController
       @filter_department = Department.find_by(id: department)
       @filter_subject = Subject.find_by(id: subject)
     elsif(department)
-      @query = Teacher.joins(:university, :department, :subjects, 'LEFT OUTER JOIN rates ON rates.teacher_id = teachers.id').where("(teachers.name LIKE :name OR teachers.surname LIKE :name) AND department_id = :department", {:name => "%#{search}%", :department => department}).group('teachers.id')
+      @query = Teacher.joins(:university, :department, :subjects, 'LEFT OUTER JOIN rates ON rates.teacher_id = teachers.id').where("(teachers.name LIKE :name OR teachers.surname LIKE :name) AND teachers.department_id = :department", {:name => "%#{search}%", :department => department}).group('teachers.id')
       @filter_department = Department.find_by(id: department)
     elsif(subject)
       @query = Teacher.joins(:university, :department, :subjects, 'LEFT OUTER JOIN rates ON rates.teacher_id = teachers.id').where("(teachers.name LIKE :name OR teachers.surname LIKE :name) AND subjects.id = :subject", {:name => "%#{search}%", :subject => subject}).group('teachers.id')
