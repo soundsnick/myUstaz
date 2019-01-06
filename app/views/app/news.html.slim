@@ -15,6 +15,8 @@ main.main-news.main-full
               .new__footer
                 span.new__published data-published=new.created_at = new.created_at.in_time_zone("Almaty").strftime("%d.%m.%Y в %H:%S")
                 a.new__button.next-button-text href="/post/#{new.id}" = "Подробнее"
+        - if @news.empty?
+          span.empty = 'Новостей пока нет'
       .search__sidebar--wrapper
         aside.search__sidebar#searchSidebar
           h3.lil-title = "Поиск по новостям"

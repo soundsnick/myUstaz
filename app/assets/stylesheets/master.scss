@@ -5,6 +5,17 @@ $transition: 0.3s;
 $gradient: linear-gradient(to left, rgb(0,140,255), rgb(130,153,238));
 $field-background: #F2F2F2;
 
+@mixin card{
+  background: #fff;
+  box-shadow: $shadow;
+}
+
+@mixin cardRounded($radius){
+  @include card;
+  border-radius: $radius;
+}
+
+
 *{
   box-sizing: border-box;
 }
@@ -72,6 +83,7 @@ body{
   color: #3F51B5;
   height: 30px;
   margin: 30px 0;
+  line-height: 30px;
   &--wrapper{
     flex: 1;
   }
@@ -90,12 +102,11 @@ body{
 
 .teacher{
   display: flex;
-  background: #fff;
   padding: 10px 20px;
   text-align: left;
   border-radius: 50px;
-  box-shadow: $shadow;
   margin-bottom: 10px;
+  @include card;
   align-items: center;
   transition: box-shadow $transition;
   &:first-child{
@@ -179,14 +190,13 @@ body{
   &--field{
     width: 100%;
     padding: 22px;
-    background: #fff;
     color: #282828;
     border: none;
     border-radius: 150px;
     font-weight: 200;
     font-size: 16px;
     text-align: center;
-    box-shadow: $shadow;
+    @include card;
   }
   &--button{
     position: absolute;
@@ -297,12 +307,11 @@ body{
   }
   &__sidebar{
     margin-top: 20px;
-    background: #fff;
     border-radius: 20px;
     margin-left: 20px;
-    box-shadow: $shadow;
     padding: 20px;
     text-align: center;
+    @include card;
     &--wrapper{
       flex: 0 0 25%;
     }
@@ -402,11 +411,10 @@ body{
   }
 }
 .filters-output{
-  background: #fff;
   padding: 20px;
   border-radius: 20px;
   margin-top: 20px;
-  box-shadow: $shadow;
+  @include card;
 }
 .news{
   &__feed{ margin-top: 20px; }
@@ -596,10 +604,9 @@ body{
 }
 .tags{
   margin-top: 20px;
-  background: #fff;
   border-radius: 0 20px 20px 0;
   padding: 20px;
-  box-shadow: $shadow;
+  @include card;
 }
 .tag{
   display: inline-block;
@@ -649,11 +656,10 @@ body{
 }
 .commentary{
   display: flex;
-  background: #fff;
   padding: 20px;
-  box-shadow: $shadow;
   margin-top: 15px;
   border-radius: 4px;
+  @include card;
   &__img{
     height: 100%;
     &--wrapper{
@@ -715,5 +721,49 @@ body{
   }
   .grey-button{
     display: inline-block;
+  }
+}
+
+.admin-header{
+  @include card;
+  .container{
+    align-items: center;
+  }
+}
+.admin__control{
+  &--grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(100px, 1fr));
+    grid-gap: 25px;
+    @include cardRounded(10px);
+    padding: 15px;
+  }
+  &--item{
+    display: block;
+    padding: 12px;
+    font-size: 15px;
+    text-align: center;
+    color: #fff;
+    font-weight: 200;
+    @include cardRounded(100px);
+    background: $gradient;
+    transition: box-shadow $transition;
+    &:hover{
+      box-shadow: 0 25px 10px -17px rgba(0, 0, 0, 0.07);
+    }
+  }
+}
+.admin__title{
+  margin: 35px 0 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #4e4e4e;
+  &.little{
+    margin: 35px 0 15px;
+    font-size: 14px;
+    font-weight: 200;
+    color: #b5b5b5;
+    text-shadow: 0 1px 0 #fff;
+    text-align: right;
   }
 }

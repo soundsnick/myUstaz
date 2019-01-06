@@ -1,0 +1,16 @@
+= render 'layouts/admin_header'
+.admin__control--wrapper
+  .container
+    .admin__control
+      h1.admin__title.little = 'Контрольная панель'
+      .admin__control--grid
+        - if admin
+          a.admin__control--item href="/admin/administrators"
+            span = 'Администраторы'
+          a.admin__control--item href="/admin/users"
+            span = 'Пользователи'
+          a.admin__control--item href="/admin/teachers"
+            span = 'Преподаватели'
+        - if moderator
+          a.admin__control--item href="/admin/commentaries"
+            span = 'Комментарии'

@@ -1,0 +1,11 @@
+header.admin-header
+  .container.flex
+    .logo--wrapper
+      a href="/admin"
+        h1.logo = @admin.role.name
+    nav.header__nav
+      a.header__nav__item href="/" = "Сайт"
+      - if admin
+        a.header__nav__item href="/logout" = "Выйти"
+coffee:
+  $('.header').remove()

@@ -6,7 +6,6 @@ header.header
     nav.header__nav
       a.header__nav__item href="/news" = "Новости"
       a.header__nav__item href="/toplist" = "Рейтинг"
-      a.header__nav__item href="/about" = "О проекте"
       - unless auth
         a.header__nav__item href="/login" = "Войти"
       - if auth
