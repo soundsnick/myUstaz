@@ -14,5 +14,11 @@ Rails.application.routes.draw do
   get '/tag/add', to: 'user#tagAdd'
   get '/toplist', to: 'app#rating'
   get '/news', to: 'app#news'
+
   get '/admin', to: 'admin#index'
+  get '/admin/users', to: 'admin#users'
+  get '/admin/administrators', to: 'admin#administrators'
+  get '/admin/users/delete/:id(.:format)', to: 'admin#user_delete', as: :admin_user_delete
+  get '/admin/news', to: 'admin#news'
+  get '/admin/posts/delete/:id(.:format)', to: 'admin#post_delete', as: :admin_post_delete
 end

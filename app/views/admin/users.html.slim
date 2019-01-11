@@ -1,0 +1,21 @@
+.admin__users--page
+  .container
+    header.admin__users__header
+      .admin__user--id.cell = 'id'
+      .admin__user--dl.cell = 'DL логин'
+      .admin__user--role.cell = 'Привилегии'
+      .admin__user--created.cell = 'Создано'
+      .admin__user--updated.cell = 'Обновлено'
+      .admin__user--control.cell = 'Действия'
+    .admin__users
+      .admin__users__body
+        - @users.each do |user|
+          .admin__user
+            .admin__user--id.cell = user.id
+            .admin__user--dl.cell = user.dl_username
+            .admin__user--role.cell = user.role.name
+            .admin__user--created.cell = user.created_at
+            .admin__user--updated.cell = user.updated_at
+            .admin__user--control.cell
+              a.admin__user--delete.admin__user--action href=admin_user_delete_path(user.id) data-confirm="Вы уверены?"
+                i.fa.fa-trash

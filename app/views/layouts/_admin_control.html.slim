@@ -1,0 +1,17 @@
+.admin__control--wrapper#adminControl data-turbolinks-permanent='true'
+  .container
+    .admin__control
+      .admin__control--grid
+        - if admin
+          a.admin__control--item href="/admin/administrators"
+            span = 'Администраторы'
+          a.admin__control--item href="/admin/users"
+            span = 'Пользователи'
+          a.admin__control--item href="/admin/teachers"
+            span = 'Преподаватели'
+        - if moderator
+          a.admin__control--item href="/admin/commentaries"
+            span = 'Комментарии'
+        - if editor
+          a.admin__control--item href="/admin/news"
+            span = 'Новости'

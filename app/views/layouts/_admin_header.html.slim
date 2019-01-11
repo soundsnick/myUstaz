@@ -7,5 +7,12 @@ header.admin-header
       a.header__nav__item href="/" = "Сайт"
       - if admin
         a.header__nav__item href="/logout" = "Выйти"
+  = render 'layouts/admin_control'
 coffee:
   $('.header').remove()
+  adminControlItem = $('.admin__control--item')
+  adminControlItem.click () ->
+    adminControlItem.removeClass 'active'
+    $(this).addClass 'active'
+  $('.logo').click () ->
+    adminControlItem.removeClass 'active'

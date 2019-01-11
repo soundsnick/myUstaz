@@ -24,11 +24,14 @@ class UserController < ApplicationController
           else
             @user = User.new
             @user.dl_username = params[:username]
-            @user.role = 0
-            @user.save
-            session[:auth] = @user
+            @user.role_id = 0
+            if @user.save
+              session[:auth] = @user
+              redirect_to root_path, notice: 'Добро пожаловать'
+            else
+              redirect_to login_path, notice: 'Возникли неполадки с сервером, мы уже работаем над проблемой'
+            end
           end
-          redirect_to root_path, notice: 'Добро пожаловать'
         else
           redirect_to login_path, notice: 'Неверный логин или пароль'
         end

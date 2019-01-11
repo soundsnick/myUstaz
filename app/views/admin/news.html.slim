@@ -1,0 +1,15 @@
+.admin__news--page
+  .container
+    header.admin__users__header
+      .admin__user--id.cell = 'id'
+      .admin__user--updated.cell = 'Заголовок'
+      .admin__user--control.cell = 'Действия'
+    .admin__news
+      - @news.each do |new|
+        .admin__user
+          .admin__user--id.cell = new.id
+          .admin__user--updated.cell
+            a href='/admin/post/#{new.id}' = new.title
+          .admin__user--control.cell
+            a.admin__user--delete.admin__user--action href=admin_post_delete_path(new.id) data-confirm="Вы уверены?"
+              i.fa.fa-trash
